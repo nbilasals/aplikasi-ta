@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Analisis Sentimen - SentiQRIS{% endblock %}
+
+{% block content %}
+<h1 class="fw-bold py-3 mb-4">Analisis Sentimen</h1>
+<div class="card">
+    <h5 class="card-header">Unggah File CSV untuk Analisis Sentimen</h5>
+    <div class="card-body">
+        <div class="mb-3">
+            <label for="formFile" class="form-label">Pastikan file csv Anda memiliki kolom 'Komentar'</label>
+            <input class="form-control" type="file" id="formFile" accept=".csv, .xlsx">
+        </div>
+        <button class="btn btn-primary">Mulai Analisis</button>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function startAnalysis() {
+        const fileInput = document.getElementById('formFile');
+        const file = fileInput.files[0];
+        if (!file) {
+            alert('Pilih file terlebih dahulu');
+            return;
+        }
+        // Add your file handling and analysis logic here
+    }
+</script>
+{% endblock %}

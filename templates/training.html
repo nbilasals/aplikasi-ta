@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Model Training{% endblock %}
+
+{% block content %}
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h1 class="fw-bold py-3 mb-4"> Model Training
+    </h1>
+    <div class="card mb-4" id="model-training-page">
+        <div class="card-body">
+            <p>Proses pelatihan model ditampilkan di bawah ini. Ini melibatkan pra-pemrosesan dataset,
+                transformasi menggunakan TF-IDF (Term Frequency-Inverse Document Frequency), dan
+                proses analisis sentimen dengan Logistic Regression dan Metode Lexicon Based.</p>
+            <p><strong>Catatan:</strong> Kamus untuk term-term setelah stemming sudah dilakukan untuk memangkas
+                waktu pemrosesan total (18 menit).</p>
+        </div>
+    </div>
+    <div class="card mb-4" id="preprocessing">
+        <h5 class="card-header"><strong>Preprocessing</strong></h5>
+        <div class="card-body">
+            <div class="table-responsive">
+                <!-- Display the table -->
+                {% if data_preprocessed_head %}
+                <div class="table__wrapper">{{ data_preprocessed_head | safe }}</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="card mb-4" id="tf-idf">
+        <h5 class="card-header"><strong>TF-IDF</strong></h5>
+        <div class="card-body">
+            <div class="table-responsive-lg">
+                <!-- Display the table -->
+                {% if data_ranking_head %}
+                <div class="table__wrapper">{{ data_ranking_head | safe }}</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4" id="analisis-sentimen">
+        <h5 class="card-header"><strong>Analisis Sentimen (Logistic Regression and Lexicon Based)</strong></h5>
+        <div class="card-body">
+            <p>
+                <span style="font-weight: bold">Split Amount:</span> {{ split_amount }}
+            </p>
+            <p>
+                <span style="font-weight: bold">Training Data:</span> {{ training_data }}
+            </p>
+            <p>
+                <span style="font-weight: bold">Testing Data:</span> {{ testing_data }}
+            </p>
+        </div>
+    </div>
+    <div class="text-center">
+        <a class="btn btn-primary" href="/result">Mulai Training</a>
+    </div>
+</div>
+
+<!-- button to go top -->
+<button onclick="topFunction()" id="myBtn" title="Go to top">
+    <i class="fa-solid fa-chevron-up"></i>
+</button>
+
+<script>
+    // Get the button:
+    let mybutton = document.getElementById('myBtn');
+
+    // When the user scrolls down 20px from the top of the document, show the button
+    window.onscroll = function () {
+        scrollFunction();
+    };
+
+    function scrollFunction() {
+        if (
+            document.body.scrollTop > 20 ||
+            document.documentElement.scrollTop > 20
+        ) {
+            mybutton.style.display = 'block';
+        } else {
+            mybutton.style.display = 'none';
+        }
+    }
+
+    // When the user clicks on the button, scroll to the top of the document
+    function topFunction() {
+        document.body.scrollTop = 0; // For Safari
+        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+    }
+</script>
+
+{% endblock %}
