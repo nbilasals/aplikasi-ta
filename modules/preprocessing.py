@@ -56,7 +56,7 @@ def preprocessed():
 
     # Customize the DataFrame columns and index names
     columns = [
-        "Tweets",
+        "Komentar",
         "Case Folding",
         "Cleaning",
         "Tokenization",

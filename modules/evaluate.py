@@ -115,7 +115,8 @@ def evaluate_model_and_predict():
     data_table = None
     chart_img_path_result = None
 
-    filename = "new_dataset_qris.csv"
+    # filename = "new_dataset_qris.csv"
+    filename = "dataset_final.csv"
     save_location_pred = os.path.join("database", filename)
 
     if request.method == "POST":
@@ -146,7 +147,7 @@ def evaluate_model_and_predict():
             logModel = pickle.load(f)
 
         df_pred = pd.read_csv(save_location_pred, delimiter=",")
-        df_pred["Text_Lower"] = df_pred["Text"].apply(case_folding)
+        df_pred["Text_Lower"] = df_pred["Komentar"].apply(case_folding)
         df_pred["Text_Cleaning"] = df_pred["Text_Lower"].apply(clean_text)
         df_pred["Text_Token"] = df_pred["Text_Cleaning"].apply(
             word_tokenize_wrapper)
@@ -165,7 +166,7 @@ def evaluate_model_and_predict():
 
         # Lexicon-Based Prediction
         lexicon_positive, lexicon_negative = load_lexicons()
-        tokens_pred = df_pred["Text"].apply(word_tokenize_wrapper)
+        tokens_pred = df_pred["Komentar"].apply(word_tokenize_wrapper)
         results_pred = tokens_pred.apply(lambda text: sentiment_analysis_lexicon_indonesia(
             text, lexicon_positive, lexicon_negative))
         _, predict_result_lexicon = zip(*results_pred)
@@ -196,7 +197,7 @@ def evaluate_model_and_predict():
         # Select columns to show
         df_pred_selected = df_pred[
             [
-                "Text",
+                "Komentar",
                 "Text_Token_Stop_Stem",
                 "Predict_Result_LR",
                 "Predict_Result_Lexicon"
