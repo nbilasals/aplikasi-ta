@@ -179,7 +179,7 @@ def evaluate_model_and_predict():
         chart_img_path_result_lexicon = generate_pie_chart_result(
             df_pred.rename(columns={"Predict_Result_Lexicon": "Predict_Result"}), "chart_result_lexicon.png")
 
-        # # Generate wordclouds for Logistic Regression
+        # Generate wordcloud
         wordcloud_positive_lr = generate_wordcloud(
             df_pred, "positive", "wordcloud_positive_logistic.png", "Predict_Result_LR")
         wordcloud_negative_lr = generate_wordcloud(
@@ -187,14 +187,12 @@ def evaluate_model_and_predict():
         wordcloud_neutral_lr = generate_wordcloud(
             df_pred, "neutral", "wordcloud_neutral_logistic.png", "Predict_Result_LR")
 
-        # Generate wordclouds for Lexicon-Based
         wordcloud_positive_lexicon = generate_wordcloud(
             df_pred, "positive", "wordcloud_positive_lexicon.png", "Predict_Result_Lexicon")
         wordcloud_negative_lexicon = generate_wordcloud(
             df_pred, "negative", "wordcloud_negative_lexicon.png", "Predict_Result_Lexicon")
         wordcloud_neutral_lexicon = generate_wordcloud(
             df_pred, "neutral", "wordcloud_neutral_lexicon.png", "Predict_Result_Lexicon")
-
         # Select columns to show
         df_pred_selected = df_pred[
             [
@@ -231,7 +229,8 @@ def evaluate_model_and_predict():
         df_pred_selected_head = df_pred_selected.head(20)
 
         # Convert the DataFrame to an HTML table
-        data_table = df_pred_selected_head.to_html(index=False)
+        data_table = df_pred_selected_head.to_html(
+            index=False, classes="table table-striped")
 
     else:
         dataset_size = 0

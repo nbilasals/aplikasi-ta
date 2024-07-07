@@ -76,6 +76,7 @@ def preprocessed():
     df_head = df_selected.head()
 
     # Convert the DataFrame to an HTML table
-    data_preprocessed_head = df_head.to_html(index=False)
+    data_preprocessed_head = df_head.to_html(
+        index=False, classes="table table-striped")
 
     return data_preprocessed_head

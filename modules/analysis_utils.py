@@ -1,3 +1,13 @@
+from modules.preprocessing_utils import (
+    case_folding,
+    clean_text,
+    replace_slang,
+    word_tokenize_wrapper,
+    stopwords_removal,
+    get_stemmed_term,
+    dict_slangs
+)
+from nltk.corpus import stopwords
 import ast
 import matplotlib
 import matplotlib.pyplot as plt
@@ -6,12 +16,50 @@ import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.preprocessing import normalize
+import ast
 
 # so that matplot isn't error
 matplotlib.use("Agg")
 
 
-# Function to generate the pie chart and return it as an image
+def convert_to_string(tokens):
+    if isinstance(tokens, str):
+        try:
+            tokens = ast.literal_eval(tokens)
+        except (ValueError, SyntaxError):
+            tokens = tokens.split()
+    return " ".join(tokens)
+
+
+def preprocess_text(text):
+    # Case folding
+    text_lower = case_folding(text)
+
+    # Cleaning
+    text_cleaned = clean_text(text_lower)
+
+    # Replace slang
+    text_cleaned = replace_slang(text_cleaned, dict_slangs)
+
+    # If the input text is tokenized, convert it back to string
+    text_cleaned = convert_to_string(text_cleaned)
+
+    # Tokenizing
+    text_tokenized = word_tokenize_wrapper(text_cleaned)
+
+    # Stopword removal
+    text_stopwords_removed = stopwords_removal(text_tokenized)
+
+    # Stemming
+    text_stemmed = get_stemmed_term(text_stopwords_removed)
+
+    # Convert tokens back to string after stemming
+    text_stemmed_string = convert_to_string(text_stemmed)
+
+    # Return the preprocessed text until stemming
+    return text_stemmed_string
+
+
 def generate_pie_chart(df):
     label_counts = df["Sentiment"].value_counts()
 
@@ -62,39 +110,44 @@ def convert(polarity):
 
 
 # term frequency - inverse document frequency
-def calculate_tfidf(df_column, max_features=1000):
-    # calc TF vector
-    cvect = CountVectorizer(max_features=max_features)
-    TF_vector = cvect.fit_transform(df_column)
+def calculate_tfidf(df_column, cvect=None, tfidf=None, max_features=1000):
+    # Use provided vectorizers or create new ones
+    if cvect is None:
+        cvect = CountVectorizer(max_features=max_features)
+        TF_vector = cvect.fit_transform(df_column)
+    else:
+        TF_vector = cvect.transform(df_column)
 
-    # normalize TF vector
+    # Normalize TF vector
     normalized_TF_vector = normalize(TF_vector, norm="l1", axis=1)
 
-    # calc IDF
-    tfidf = TfidfVectorizer(max_features=max_features, smooth_idf=False)
-    tfidf.fit_transform(df_column)  # Fit the TfidfVectorizer with the data
+    if tfidf is None:
+        tfidf = TfidfVectorizer(max_features=max_features, smooth_idf=False)
+        tfidf.fit(df_column)  # Fit the TfidfVectorizer with the data
+    # No need to fit tfidf again, just use the idf values
     IDF_vector = tfidf.idf_
 
-    # hitung TF x IDF sehingga dihasilkan TFIDF matrix / vector
+    # Calculate TF-IDF matrix
     tfidf_mat = normalized_TF_vector.multiply(IDF_vector).toarray()
 
-    # ranking the top term
+    # Get feature names
     terms = tfidf.get_feature_names_out()
 
-    # sum tfidf frequency of each term through documents
+    # Sum TF-IDF frequency of each term through documents
     sums = tfidf_mat.sum(axis=0)
 
-    # calculating TF for each term
+    # Calculate TF for each term
     term_freq = TF_vector.sum(axis=0).A1
 
-    # calculating IDF for each term
+    # Calculate IDF for each term
     idf_values = IDF_vector
 
-    # connecting term to its sums frequency
+    # Connect term to its sums frequency
     data = []
     for col, term in enumerate(terms):
         data.append((term, term_freq[col], idf_values[col], sums[col]))
 
+    # Create a DataFrame with term statistics
     data_ranking = pd.DataFrame(data, columns=["term", "TF", "IDF", "rank"])
     data_ranking = data_ranking.sort_values("rank", ascending=False)
 
@@ -107,3 +160,15 @@ def convert_to_percent(decimal_value):
     complementary_percent = 100 - percent_value
     result = f"{int(complementary_percent)}% | {int(percent_value)}%"
     return result
+
+
+def sentiment_analysis_lexicon_indonesia(text, lexicon_positive, lexicon_negative):
+    score = 0
+    for word_pos in text:
+        if word_pos in lexicon_positive:
+            score += lexicon_positive[word_pos]
+    for word_neg in text:
+        if word_neg in lexicon_negative:
+            score -= lexicon_negative[word_neg]
+    polarity = 'positive' if score > 0 else 'negative' if score < 0 else 'neutral'
+    return score, polarity

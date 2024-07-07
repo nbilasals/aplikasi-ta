@@ -3,29 +3,126 @@
 {% block title %}Analisis Sentimen - SentiQRIS{% endblock %}
 
 {% block content %}
-<h1 class="fw-bold py-3 mb-4">Analisis Sentimen</h1>
-<div class="card">
-    <h5 class="card-header">Unggah File CSV untuk Analisis Sentimen</h5>
-    <div class="card-body">
-        <div class="mb-3">
-            <label for="formFile" class="form-label">Pastikan file csv Anda memiliki kolom 'Komentar'</label>
-            <input class="form-control" type="file" id="formFile" accept=".csv, .xlsx">
+<div class="container py-4">
+    <h1 class="fw-bold py-3 mb-4">Analisis Sentimen</h1>
+
+    <div class="card mb-4">
+        <h5 class="card-header">Unggah File CSV untuk Analisis Sentimen</h5>
+        <div class="card-body">
+            <form id="uploadForm" action="{{ url_for('analisis') }}" method="POST" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="formFile" class="form-label">Pastikan file csv Anda memiliki kolom 'Komentar'</label>
+                    <input class="form-control" type="file" id="formFile" name="file" accept=".csv, .xlsx">
+                </div>
+                <button type="submit" class="btn btn-primary">Mulai Analisis</button>
+            </form>
         </div>
-        <button class="btn btn-primary">Mulai Analisis</button>
     </div>
+
+    {% if data %}
+    <div id="hasil">
+        <h2 class="fw-bold mt-4 mb-3">Hasil Analisis Sentimen</h2>
+        <div class="table-responsive mb-4">
+            <p>Rows: {{ dataset_size[0] }}</p>
+            <p>Columns: {{ dataset_size[1] }}</p>
+            {{ data|safe }}
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <h4 class="card-header"><strong>Pie Chart Data</strong></h4>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5 class="text-center">Logistic Regression</h5>
+                    <img src="{{ chart_img_path_lr_predict }}" alt="Pie Chart" class="pie__chart img-fluid" />
+                </div>
+                <div class="col-md-6">
+                    <h5 class="text-center">Lexicon-Based</h5>
+                    <img src="{{ chart_img_path_lexicon_predict }}" alt="Pie Chart" class="pie__chart img-fluid" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <h4 class="card-header"><strong>Word Clouds</strong></h4>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <h5 class="text-center">Logistic Regression</h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <h6 class="text-center">Positive</h6>
+                    <img src="{{ wordcloud_positive_lr_predict }}" alt="Word Cloud Logistic Regression Positive"
+                        class="img-fluid">
+                </div>
+                <div class="col-md-4">
+                    <h6 class="text-center">Negative</h6>
+                    <img src="{{ wordcloud_negative_lr_predict }}" alt="Word Cloud Logistic Regression Negative"
+                        class="img-fluid">
+                </div>
+                <div class="col-md-4">
+                    <h6 class="text-center">Neutral</h6>
+                    <img src="{{ wordcloud_neutral_lr_predict }}" alt="Word Cloud Logistic Regression Neutral"
+                        class="img-fluid">
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <h5 class="text-center">Lexicon-Based</h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <h6 class="text-center">Positive</h6>
+                    <img src="{{ wordcloud_positive_lexicon_predict }}" alt="Word Cloud Lexicon-Based Positive"
+                        class="img-fluid">
+                </div>
+                <div class="col-md-4">
+                    <h6 class="text-center">Negative</h6>
+                    <img src="{{ wordcloud_negative_lexicon_predict }}" alt="Word Cloud Lexicon-Based Negative"
+                        class="img-fluid">
+                </div>
+                <div class="col-md-4">
+                    <h6 class="text-center">Neutral</h6>
+                    <img src="{{ wordcloud_neutral_lexicon_predict }}" alt="Word Cloud Lexicon-Based Neutral"
+                        class="img-fluid">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% endif %}
 </div>
 {% endblock %}
 
 {% block scripts %}
 <script>
-    function startAnalysis() {
-        const fileInput = document.getElementById('formFile');
-        const file = fileInput.files[0];
-        if (!file) {
-            alert('Pilih file terlebih dahulu');
-            return;
-        }
-        // Add your file handling and analysis logic here
-    }
+    // Ensure the page content loads before attaching event listener
+    document.addEventListener('DOMContentLoaded', function () {
+        // Add event listener to form submission
+        document.getElementById('uploadForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent default form submission
+            const form = event.target;
+            const formData = new FormData(form); // Create FormData object
+
+            // Fetch POST request to the server
+            fetch(form.action, {
+                method: form.method,
+                body: formData
+            })
+                .then(response => response.text())
+                .then(data => {
+                    // Replace entire body content with response HTML
+                    document.querySelector('body').innerHTML = data;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+    });
 </script>
 {% endblock %}

@@ -7,7 +7,7 @@ Result
 {% block content %}
 <div class="content-wrapper">
     <div class="container-xxl flex-grow-1 container-p-y">
-        <h1 class="fw-bold py-3 mb-4"> Hasil Analisis Sentimen</h1>
+        <h1 class="fw-bold py-3 mb-4">Hasil dan Evaluasi Analisis Sentimen</h1>
 
         <div class="card mb-4">
             <div class="card-body">
@@ -17,14 +17,13 @@ Result
         </div>
 
         <div class="card mb-4">
-            <h4 class="card-header"><strong>Hasil dan Evaluasi Analisis Sentimen</strong></h4>
+            <h4 class="card-header"><strong>Hasil Analisis Sentimen</strong></h4>
             <div class="card-body">
                 <div class="table-responsive">
                     {% if data_table %}
                     <div class="dataset__content__data">
                         <p>Rows: {{ dataset_size[0] }}</p>
                         <p>Columns: {{ dataset_size[1] }}</p>
-
                         <br />
                         <hr />
                         <br />
@@ -33,131 +32,122 @@ Result
                     {% endif %}
                 </div>
             </div>
-
-            <div class="card mb-4">
-                <h4 class="card-header"><strong>Pie Chart Data</strong></h4>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5 class="text-center">Logistic Regression</h5>
-                            <img src="{{ chart_img_path_result_lr }}" alt="Pie Chart" class="pie__chart img-fluid" />
-                        </div>
-                        <div class="col-md-6">
-                            <h5 class="text-center">Lexicon-Based</h5>
-                            <img src="{{ chart_img_path_result_lexicon }}" alt="Pie Chart"
-                                class="pie__chart img-fluid" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card mb-4">
-                <h4 class="card-header"><strong>Wordclouds</strong></h4>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <h5 class="text-center">Logistic Regression</h5>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <h6 class="text-center">Positive</h6>
-                            <img src="{{ wordcloud_positive_lr }}" alt="Wordcloud Positive Logistic"
-                                class="img-fluid" />
-                        </div>
-                        <div class="col-md-4">
-                            <h6 class="text-center">Negative</h6>
-                            <img src="{{ wordcloud_negative_lr }}" alt="Wordcloud Negative Logistic"
-                                class="img-fluid" />
-                        </div>
-                        <div class="col-md-4">
-                            <h6 class="text-center">Neutral</h6>
-                            <img src="{{ wordcloud_neutral_lr }}" alt="Wordcloud Neutral Logistic" class="img-fluid" />
-                        </div>
-                    </div>
-                    <div class="row mt-4">
-                        <div class="col-md-12">
-                            <h5 class="text-center">Lexicon-Based</h5>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <h6 class="text-center">Positive</h6>
-                            <img src="{{ wordcloud_positive_lexicon }}" alt="Wordcloud Positive Lexicon"
-                                class="img-fluid" />
-                        </div>
-                        <div class="col-md-4">
-                            <h6 class="text-center">Negative</h6>
-                            <img src="{{ wordcloud_negative_lexicon }}" alt="Wordcloud Negative Lexicon"
-                                class="img-fluid" />
-                        </div>
-                        <div class="col-md-4">
-                            <h6 class="text-center">Neutral</h6>
-                            <img src="{{ wordcloud_neutral_lexicon }}" alt="Wordcloud Neutral Lexicon"
-                                class="img-fluid" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-
-
-            <div class="card mb-4">
-                <h4 class="card-header"><strong>Hasil Evaluasi Matriks</strong></h4>
-                <div class="card-body">
-                    <div class="table-responsive text-nowrap">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Method</th>
-                                    <th>Test Accuracy</th>
-                                    <th>Precision</th>
-                                    <th>Recall</th>
-                                    <th>F1-score</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Logistic Regression</td>
-                                    <td> {{ acc_score_percentage_lr | safe }}</td>
-                                    <td>{{ precision_percentage_lr | safe }}</td>
-                                    <td>{{ recall_percentage_lr | safe }}</td>
-                                    <td>{{ f1_percentage_lr | safe }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Lexicon Based</td>
-                                    <td>{{ acc_score_percentage_lex | safe }}</td>
-                                    <td>{{ precision_percentage_lex | safe }}</td>
-                                    <td>{{ recall_percentage_lex | safe }}</td>
-                                    <td>{{ f1_percentage_lex | safe }}</td>
-                                </tr>
-                                <!-- Add your rows here -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card mb-4">
-                <h4 class="card-header"><strong>Confusion Matrix</strong></h4>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5 class="text-center">Logistic Regression</h5>
-                            <img src="{{ chart_img_path_lr }}" alt="Confusion Matrix"
-                                class="confmat__chart img-fluid" />
-                        </div>
-                        <div class="col-md-6">
-                            <h5 class="text-center">Lexicon-Based</h5>
-                            <img src="{{ chart_img_path_lex }}" alt="Confusion Matrix"
-                                class="confmat__chart img-fluid" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
         </div>
+
+        <div class="card mb-4">
+            <h4 class="card-header"><strong>Pie Chart Data</strong></h4>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5 class="text-center">Logistic Regression</h5>
+                        <img src="{{ chart_img_path_result_lr }}" alt="Pie Chart" class="pie__chart img-fluid" />
+                    </div>
+                    <div class="col-md-6">
+                        <h5 class="text-center">Lexicon-Based</h5>
+                        <img src="{{ chart_img_path_result_lexicon }}" alt="Pie Chart" class="pie__chart img-fluid" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <h4 class="card-header"><strong>Wordclouds</strong></h4>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h5 class="text-center">Logistic Regression</h5>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <h6 class="text-center">Positive</h6>
+                        <img src="{{ wordcloud_positive_lr }}" alt="Wordcloud Positive Logistic" class="img-fluid" />
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="text-center">Negative</h6>
+                        <img src="{{ wordcloud_negative_lr }}" alt="Wordcloud Negative Logistic" class="img-fluid" />
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="text-center">Neutral</h6>
+                        <img src="{{ wordcloud_neutral_lr }}" alt="Wordcloud Neutral Logistic" class="img-fluid" />
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <h5 class="text-center">Lexicon-Based</h5>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <h6 class="text-center">Positive</h6>
+                        <img src="{{ wordcloud_positive_lexicon }}" alt="Wordcloud Positive Lexicon"
+                            class="img-fluid" />
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="text-center">Negative</h6>
+                        <img src="{{ wordcloud_negative_lexicon }}" alt="Wordcloud Negative Lexicon"
+                            class="img-fluid" />
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="text-center">Neutral</h6>
+                        <img src="{{ wordcloud_neutral_lexicon }}" alt="Wordcloud Neutral Lexicon" class="img-fluid" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <h4 class="card-header"><strong>Hasil Evaluasi Matriks</strong></h4>
+            <div class="card-body">
+                <div class="table-responsive text-nowrap">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Method</th>
+                                <th>Test Accuracy</th>
+                                <th>Precision</th>
+                                <th>Recall</th>
+                                <th>F1-score</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Logistic Regression</td>
+                                <td>{{ acc_score_percentage_lr | safe }}</td>
+                                <td>{{ precision_percentage_lr | safe }}</td>
+                                <td>{{ recall_percentage_lr | safe }}</td>
+                                <td>{{ f1_percentage_lr | safe }}</td>
+                            </tr>
+                            <tr>
+                                <td>Lexicon Based</td>
+                                <td>{{ acc_score_percentage_lex | safe }}</td>
+                                <td>{{ precision_percentage_lex | safe }}</td>
+                                <td>{{ recall_percentage_lex | safe }}</td>
+                                <td>{{ f1_percentage_lex | safe }}</td>
+                            </tr>
+                            <!-- Add your rows here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <h4 class="card-header"><strong>Confusion Matrix</strong></h4>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5 class="text-center">Logistic Regression</h5>
+                        <img src="{{ chart_img_path_lr }}" alt="Confusion Matrix" class="confmat__chart img-fluid" />
+                    </div>
+                    <div class="col-md-6">
+                        <h5 class="text-center">Lexicon-Based</h5>
+                        <img src="{{ chart_img_path_lex }}" alt="Confusion Matrix" class="confmat__chart img-fluid" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
-    {% endblock %}
+</div>
+{% endblock %}

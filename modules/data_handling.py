@@ -33,46 +33,22 @@ def handle_uploaded_data():
             error_msg = "Invalid file. Only CSV files are allowed."
 
     if os.path.exists(save_location):
-        try:
-            df = pd.read_csv(save_location, usecols=["Komentar", "Sentiment"])
-            dataset_size = df.shape
+        df = pd.read_csv(save_location, usecols=["Komentar", "Sentiment"])
+        dataset_size = df.shape
 
-            df = df[["Komentar", "Sentiment"]]
-            df.insert(0, "No", range(1, len(df) + 1))
+        df = df[["Komentar", "Sentiment"]]
+        df.insert(0, "No", range(1, len(df) + 1))
 
-            table_html = """
-                <div class="card">
-                  <div class="table-responsive">
-                    <table class="table">
-                      <thead>
-                        <tr>
-                          <th>No</th>
-                          <th>Komentar</th>
-                          <th>Sentiment</th>
-                        </tr>
-                      </thead>
-                      <tbody class="table-border">
-            """
-            for index, row in df.iterrows():
-                table_html += f"""
-                  <tr>
-                    <td>{row['No']}</td>
-                    <td>{row['Komentar']}</td>
-                    <td>{row['Sentiment']}</td>
-                  </tr>
-                """
-            table_html += """
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-            """
-            data_table = table_html
-        except pd.errors.ParserError as e:
-            error_msg = f"Error parsing CSV file: {e}"
-        except ValueError as e:
-            error_msg = f"Value error: {e}. Please ensure the file contains the required columns."
-        except Exception as e:
-            error_msg = f"An unexpected error occurred: {e}"
+        # Set the 'No' column as the index
+        df.set_index("No")
 
-    return columns, error_msg, success_msg, dataset_size, data_table
+        # Convert the DataFrame to an HTML table
+        data_table = df.to_html(index=False, classes="table table-striped")
+
+        return (
+            columns,
+            error_msg,
+            success_msg,
+            dataset_size,
+            data_table,
+        )
