@@ -25,7 +25,25 @@
         <div class="table-responsive mb-4">
             <p>Rows: {{ dataset_size[0] }}</p>
             <p>Columns: {{ dataset_size[1] }}</p>
-            {{ data|safe }}
+            <!-- {{ data|safe }} -->
+            <table id="example" class="table table-striped table-bordered display">
+                <thead class="text-center">
+                    <tr>
+                        {% for column in columns1 %}
+                        <th>{{ column }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in data1 %}
+                    <tr>
+                        {% for column in columns1 %}
+                        <td>{{ row[column] }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 

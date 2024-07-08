@@ -123,8 +123,9 @@ def analisis():
             df_selected.set_index("No")
 
             df = df_selected
-            dataset_size = df_selected.shape
-
+            dataset_size = df.shape
+            data1 = df.to_dict(orient='records')
+            columns1 = df.columns.values
             # Render the results in a new page
             return render_template('analisis.html', data=df.to_html(index=False, classes="table table-striped"),
                                    chart_img_path_lr_predict=chart_img_path_lr_predict,
@@ -135,7 +136,9 @@ def analisis():
                                    wordcloud_positive_lexicon_predict=wordcloud_positive_lexicon_predict,
                                    wordcloud_negative_lexicon_predict=wordcloud_negative_lexicon_predict,
                                    wordcloud_neutral_lexicon_predict=wordcloud_neutral_lexicon_predict,
-                                   dataset_size=dataset_size)
+                                   dataset_size=dataset_size,
+                                   data1=data1,
+                                   columns1=columns1)
 
     return render_template('analisis.html')
 
@@ -150,6 +153,8 @@ def dataset():
         success_msg,
         dataset_size,
         data_table,
+        data1,
+        columns1,
     ) = data_handling.handle_uploaded_data()
 
     return render_template(
@@ -159,6 +164,8 @@ def dataset():
         success=success_msg,
         dataset_size=dataset_size,
         data_table=data_table,
+        data1=data1,
+        columns1=columns1,
     )
 
 
@@ -172,7 +179,7 @@ def training():
         testing_data,
         split_amount,
     ) = analysis.analyze()
-    
+
     return render_template(
         "training.html",
         data_preprocessed_head=data_preprocessed_head,
@@ -209,7 +216,9 @@ def result():
         wordcloud_neutral_lr,
         wordcloud_positive_lexicon,
         wordcloud_negative_lexicon,
-        wordcloud_neutral_lexicon
+        wordcloud_neutral_lexicon,
+        data1,
+        columns1,
     ) = evaluate.evaluate_model_and_predict()
 
     return render_template(
@@ -235,7 +244,9 @@ def result():
         wordcloud_neutral_lr=wordcloud_neutral_lr,
         wordcloud_positive_lexicon=wordcloud_positive_lexicon,
         wordcloud_negative_lexicon=wordcloud_negative_lexicon,
-        wordcloud_neutral_lexicon=wordcloud_neutral_lexicon
+        wordcloud_neutral_lexicon=wordcloud_neutral_lexicon,
+        data1=data1,
+        columns1=columns1,
     )
 
 

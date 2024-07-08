@@ -45,10 +45,15 @@ def handle_uploaded_data():
         # Convert the DataFrame to an HTML table
         data_table = df.to_html(index=False, classes="table table-striped")
 
+        data1 = df.to_dict(orient='records')
+        columns1 = df.columns.values
+
         return (
             columns,
             error_msg,
             success_msg,
             dataset_size,
             data_table,
+            data1,
+            columns1,
         )

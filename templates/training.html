@@ -18,7 +18,7 @@
     <div class="card mb-4" id="preprocessing">
         <h5 class="card-header"><strong>Preprocessing</strong></h5>
         <div class="card-body">
-            <div class="table-responsive">
+            <div class="table-responsive text-center">
                 <!-- Display the table -->
                 {% if data_preprocessed_head %}
                 <div class="table__wrapper">{{ data_preprocessed_head | safe }}</div>
@@ -29,7 +29,7 @@
     <div class="card mb-4" id="tf-idf">
         <h5 class="card-header"><strong>TF-IDF</strong></h5>
         <div class="card-body">
-            <div class="table-responsive-lg">
+            <div class="table-responsive text-center">
                 <!-- Display the table -->
                 {% if data_ranking_head %}
                 <div class="table__wrapper">{{ data_ranking_head | safe }}</div>
@@ -56,11 +56,6 @@
         <a class="btn btn-primary" href="/result">Mulai Training</a>
     </div>
 </div>
-
-<!-- button to go top -->
-<button onclick="topFunction()" id="myBtn" title="Go to top">
-    <i class="fa-solid fa-chevron-up"></i>
-</button>
 
 <script>
     // Get the button:

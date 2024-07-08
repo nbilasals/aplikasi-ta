@@ -227,11 +227,14 @@ def evaluate_model_and_predict():
         df_pred_selected.set_index("No")
 
         # Take just the head
-        df_pred_selected_head = df_pred_selected.head(20)
+        df_pred_selected_head = df_pred_selected
 
         # Convert the DataFrame to an HTML table
         data_table = df_pred_selected_head.to_html(
             index=False, classes="table table-striped")
+
+        data1 = df_pred_selected_head.to_dict(orient='records')
+        columns1 = df_pred_selected_head.columns.values
 
     else:
         dataset_size = 0
@@ -258,5 +261,7 @@ def evaluate_model_and_predict():
         wordcloud_neutral_lr,
         wordcloud_positive_lexicon,
         wordcloud_negative_lexicon,
-        wordcloud_neutral_lexicon
+        wordcloud_neutral_lexicon,
+        data1,
+        columns1,
     )
