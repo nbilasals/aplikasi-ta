@@ -51,7 +51,7 @@ def analyze():
 
     # choose the head of the document
     df_analyze_head = df_selected.head()
-    df_ranking_head = data_ranking.head()
+    df_ranking_head = data_ranking.head(20)
 
     # Convert the DataFrame to an HTML table
     data_analyze_head = df_analyze_head.to_html(index=False)
