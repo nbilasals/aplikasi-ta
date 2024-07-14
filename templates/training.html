@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="container-xxl flex-grow-1 container-p-y">
-    <h1 class="fw-bold py-3 mb-4"> Model Training
+    <h1 class="fw-bold py-3 mb-4 text-primary"> Model Training
     </h1>
     <div class="card mb-4" id="model-training-page">
         <div class="card-body">
@@ -16,7 +16,7 @@
         </div>
     </div>
     <div class="card mb-4" id="preprocessing">
-        <h5 class="card-header"><strong>Preprocessing</strong></h5>
+        <h5 class="card-header text-primary"><strong>Preprocessing</strong></h5>
         <div class="card-body">
             <div class="table-responsive text-center">
                 <!-- Display the table -->
@@ -27,7 +27,7 @@
         </div>
     </div>
     <div class="card mb-4" id="tf-idf">
-        <h5 class="card-header"><strong>TF-IDF</strong></h5>
+        <h5 class="card-header text-primary"><strong>TF-IDF</strong></h5>
         <div class="card-body">
             <div class="table-responsive">
                 <!-- Display the table -->
@@ -39,7 +39,8 @@
     </div>
 
     <div class="card mb-4" id="analisis-sentimen">
-        <h5 class="card-header"><strong>Analisis Sentimen (Logistic Regression and Lexicon Based)</strong></h5>
+        <h5 class="card-header text-primary"><strong>Analisis Sentimen (Logistic Regression and Lexicon Based)</strong>
+        </h5>
         <div class="card-body">
             <p>
                 <span style="font-weight: bold">Split Amount:</span> {{ split_amount }}

@@ -116,7 +116,7 @@ def evaluate_model_and_predict():
     chart_img_path_result = None
 
     # filename = "new_dataset_qris.csv"
-    filename = "dataset_final.csv"
+    filename = "dataset_df.csv"
     save_location_pred = os.path.join("database", filename)
 
     if request.method == "POST":

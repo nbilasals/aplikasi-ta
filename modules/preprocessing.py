@@ -15,7 +15,7 @@ from modules.preprocessing_utils import (
 
 def preprocessed():
     # open the dataset
-    filename = "dataset_final.csv"
+    filename = "dataset_df.csv"
     save_location = os.path.join("database", filename)
     df = pd.read_csv(save_location, delimiter=",")
 

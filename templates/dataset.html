@@ -7,9 +7,9 @@ Dataset
 {% block content %}
 <div class="content-wrapper">
   <div class="container-xxl py-3">
+    <h1 class="fw-bold mb-4 text-primary">Dataset</h1>
     <div class="card mb-4">
       <div class="card-body">
-        <h1 class="fw-bold mb-4">Dataset</h1>
         <p>Di bawah ini adalah kumpulan dokumen yang digunakan sebagai data pelatihan dan pengujian untuk sistem
           analisis sentimen. Anda bisa menambahkan dokumen baru ke dalam kumpulan data dengan mengklik tombol "Choose
           File" dan "Unggah". Dataset ini memungkinkan sistem untuk belajar dan meningkatkan akurasi klasifikasinya.</p>
@@ -30,7 +30,7 @@ Dataset
 
     <div class="card mb-4">
       <div class="card-body">
-        <h4 class="fw-bold py-3 mb-4">Unggah Data Baru</h4>
+        <h4 class="fw-bold py-3 mb-4 text-primary">Unggah Data Baru</h4>
         <div class="mb-3">
           <label for="formFile" class="form-label">Pilih file CSV</label>
           <form action="" method="POST" enctype="multipart/form-data">
@@ -50,7 +50,7 @@ Dataset
     {% if data_table %}
     <div class="card mb-4">
       <div class="card-body">
-        <h4 class="fw-bold py-3 mb-4">Data</h4>
+        <h4 class="fw-bold py-3 mb-4 text-primary">Data</h4>
         <p><strong>Rows:</strong> {{ dataset_size[0] }}</p>
         <p><strong>Columns:</strong> {{ dataset_size[1] }}</p>
       </div>

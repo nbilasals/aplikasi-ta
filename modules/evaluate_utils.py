@@ -25,7 +25,7 @@ def plot_confusion_matrix(y_test, y_preds, classes, filename):
 
 def generate_wordcloud(df_pred, sentiment, filename, column_name):
     additional_stopwords = {'transaksi', 'bayar', 'pake', 'pakai', 'tunai', 'gue', 'singapura', 'malaysia', 'kredit', 'kartu',
-                            'dbank', 'banget', 'surabaya', 'ims', 'danamon', 'infinite', 'nya', 'ribu', 'kartu kredit'}
+                            'dbank', 'banget', 'surabaya', 'pro', 'tiket', 'ims', 'danamon', 'infinite', 'nya', 'ribu', 'kartu kredit'}
     stopwords = set(STOPWORDS).union(additional_stopwords)
    # Ensure the tokenized texts are valid lists before joining
 
