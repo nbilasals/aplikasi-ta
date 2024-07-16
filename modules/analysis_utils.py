@@ -172,3 +172,4 @@ def sentiment_analysis_lexicon_indonesia(text, lexicon_positive, lexicon_negativ
             score -= lexicon_negative[word_neg]
     polarity = 'positive' if score > 0 else 'negative' if score < 0 else 'neutral'
     return score, polarity
+

@@ -1,0 +1,76 @@
+import os
+import pandas as pd
+from flask import request
+from werkzeug.utils import secure_filename
+
+
+def allowed_file(filename):
+return '.' in filename and filename.rsplit('.', 1)[1].lower() == 'csv'
+
+
+def handle_uploaded_data():
+error_msg = None
+success_msg = None
+data_table = None
+dataset_size = (0, 0)
+columns = ["No", "Komentar", "Sentiment"]
+
+new_filename = "dataset_df.csv"
+save_location = os.path.join("database", new_filename)
+
+if request.method == "POST":
+file = request.files.get("file")
+if not file:
+error_msg = "No file selected."
+elif file and allowed_file(file.filename):
+filename = secure_filename(file.filename)
+try:
+# Read the uploaded CSV data
+df_new = pd.read_csv(file)
+
+# Ensure the new data has the correct columns
+if not set(columns[1:]).issubset(df_new.columns):
+error_msg = "Invalid file structure. Ensure it has 'Komentar' and 'Sentiment' columns."
+return columns, error_msg, success_msg, dataset_size, data_table, [], []
+
+# Filter the new dataframe to only include the required columns
+df_new = df_new[["Komentar", "Sentiment"]]
+
+# Append the new data to the existing dataset if it exists
+if os.path.exists(save_location):
+df_existing = pd.read_csv(save_location)
+df_combined = pd.concat([df_existing, df_new], ignore_index=True)
+else:
+df_combined = df_new
+
+# Save the combined dataset to dataset_df.csv
+df_combined.to_csv(save_location, index=False)
+
+success_msg = "File uploaded and appended successfully."
+except Exception as e:
+error_msg = f"An error occurred while processing the file: {e}"
+else:
+error_msg = "Invalid file. Only CSV files are allowed."
+
+if os.path.exists(save_location):
+df = pd.read_csv(save_location)
+dataset_size = df.shape
+
+df = df[["Komentar", "Sentiment"]]
+df.insert(0, "No", range(1, len(df) + 1))
+
+# Convert the DataFrame to an HTML table
+data_table = df.to_html(index=False, classes="table table-striped")
+
+data1 = df.to_dict(orient='records')
+columns1 = df.columns.values
+
+return (
+columns,
+error_msg,
+success_msg,
+dataset_size,
+data_table,
+data1,
+columns1,
+)

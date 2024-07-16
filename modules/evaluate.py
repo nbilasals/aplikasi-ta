@@ -1,12 +1,13 @@
 import os
 import pandas as pd
 import pickle
-from flask import request
+from flask import request, render_template
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
-from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import normalize
+import numpy as np
 import csv
 from werkzeug.utils import secure_filename
+from logistic_regression import LogisticRegressionOvR
 
 from modules.preprocessing_utils import (
     case_folding,
@@ -34,6 +35,19 @@ def load_lexicons():
     return lexicon_positive, lexicon_negative
 
 
+# Define the label mapping
+label_mapping = {'positive': 0, 'neutral': 1, 'negative': 2}
+reverse_label_mapping = {0: 'positive', 1: 'neutral', 2: 'negative'}
+
+
+def map_labels(y, mapping):
+    return np.array([mapping[label] for label in y])
+
+
+def reverse_map_labels(y, mapping):
+    return np.array([mapping[label] for label in y])
+
+
 def evaluate_model_and_predict():
     filename = "data.pkl"
     save_location = os.path.join("database", filename)
@@ -43,9 +57,12 @@ def evaluate_model_and_predict():
             X_train, X_test, y_train, y_test, text_train, text_test = pickle.load(
                 f)
 
+        # Map string labels to integers
+        y_train = map_labels(y_train, label_mapping)
+        y_test = map_labels(y_test, label_mapping)
+
         # Logistic Regression
-        logModel = LogisticRegression(
-            multi_class='multinomial', solver='lbfgs', max_iter=1000, penalty='l2', C=4)
+        logModel = LogisticRegressionOvR(learning_rate=0.01, n_iters=500)
         logModel.fit(X_train, y_train)
         y_preds_lr = logModel.predict(X_test)
 
@@ -76,6 +93,9 @@ def evaluate_model_and_predict():
         results = tokens.apply(lambda text: sentiment_analysis_lexicon_indonesia(
             text, lexicon_positive, lexicon_negative))
         _, y_preds_lexicon = zip(*results)
+
+        # Convert lexicon predictions to integers
+        y_preds_lexicon = map_labels(y_preds_lexicon, label_mapping)
 
         # Evaluation Metrics for Lexicon-Based
         acc_score_lex = accuracy_score(y_test, y_preds_lexicon)
@@ -115,7 +135,6 @@ def evaluate_model_and_predict():
     data_table = None
     chart_img_path_result = None
 
-    # filename = "new_dataset_qris.csv"
     filename = "dataset_df.csv"
     save_location_pred = os.path.join("database", filename)
 
@@ -162,7 +181,8 @@ def evaluate_model_and_predict():
         tfidf_mat_new = normalized_TF_vector_new.multiply(IDF_vector).toarray()
 
         predict_result_lr = logModel.predict(tfidf_mat_new)
-        df_pred["Predict_Result_LR"] = predict_result_lr
+        df_pred["Predict_Result_LR"] = [reverse_label_mapping[pred]
+                                        for pred in predict_result_lr]
 
         # Lexicon-Based Prediction
         lexicon_positive, lexicon_negative = load_lexicons()
@@ -170,7 +190,12 @@ def evaluate_model_and_predict():
         results_pred = tokens_pred.apply(lambda text: sentiment_analysis_lexicon_indonesia(
             text, lexicon_positive, lexicon_negative))
         _, predict_result_lexicon = zip(*results_pred)
-        df_pred["Predict_Result_Lexicon"] = predict_result_lexicon
+
+        # Convert lexicon predictions to integers and then map back to strings
+        predict_result_lexicon = map_labels(
+            predict_result_lexicon, label_mapping)
+        df_pred["Predict_Result_Lexicon"] = [reverse_label_mapping[pred]
+                                             for pred in predict_result_lexicon]
 
         # Generate pie chart results for Logistic Regression
         chart_img_path_result_lr = generate_pie_chart_result(
@@ -180,13 +205,13 @@ def evaluate_model_and_predict():
         chart_img_path_result_lexicon = generate_pie_chart_result(
             df_pred.rename(columns={"Predict_Result_Lexicon": "Predict_Result"}), "chart_result_lexicon.png")
 
-        # Generate wordcloud
+        # Generate wordclouds
         wordcloud_positive_lr = generate_wordcloud(
-            df_pred, "positive", "wordcloud_positive_logistic.png", "Predict_Result_LR")
+            df_pred, "positive", "wordcloud_positive_lr.png", "Predict_Result_LR")
         wordcloud_negative_lr = generate_wordcloud(
-            df_pred, "negative", "wordcloud_negative_logistic.png", "Predict_Result_LR")
+            df_pred, "negative", "wordcloud_negative_lr.png", "Predict_Result_LR")
         wordcloud_neutral_lr = generate_wordcloud(
-            df_pred, "neutral", "wordcloud_neutral_logistic.png", "Predict_Result_LR")
+            df_pred, "neutral", "wordcloud_neutral_lr.png", "Predict_Result_LR")
 
         wordcloud_positive_lexicon = generate_wordcloud(
             df_pred, "positive", "wordcloud_positive_lexicon.png", "Predict_Result_Lexicon")
@@ -194,6 +219,7 @@ def evaluate_model_and_predict():
             df_pred, "negative", "wordcloud_negative_lexicon.png", "Predict_Result_Lexicon")
         wordcloud_neutral_lexicon = generate_wordcloud(
             df_pred, "neutral", "wordcloud_neutral_lexicon.png", "Predict_Result_Lexicon")
+
         # Select columns to show
         df_pred_selected = df_pred[
             [
