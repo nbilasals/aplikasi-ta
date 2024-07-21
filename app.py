@@ -1,19 +1,21 @@
-from flask import Flask, render_template, request, flash, redirect
+from flask import Flask, render_template, request, flash, redirect, send_file
 from werkzeug.utils import secure_filename
 from modules import data_handling, preprocessing, analysis, evaluate
 from modules.analysis_utils import sentiment_analysis_lexicon_indonesia, preprocess_text, calculate_tfidf
 import pandas as pd
 import pickle
+import pdfkit
 from modules.evaluate_utils import generate_pie_chart_result, generate_wordcloud
 from modules.evaluate import load_lexicons
 import os
 import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from scipy.sparse import issparse
-
-
+from modules.laporan import report_display, print_report
 app = Flask(__name__)
 
+pdfkit_config = pdfkit.configuration(
+    wkhtmltopdf='C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe')
 # Load the logistic regression model and vectorizer
 with open('database/classifier_model_lr.pkl', 'rb') as model_file:
     logistic_regression_model = pickle.load(model_file)
@@ -60,6 +62,11 @@ def analisis():
             # Perform sentiment analysis using Logistic Regression
             df['Logistic_Regression_Result'] = logistic_regression_model.predict(
                 X)
+            df['Logistic_Regression_Result'] = df['Logistic_Regression_Result'].replace({
+                0: 'positive',
+                1: 'neutral',
+                2: 'negative'
+            })
 
             # Perform sentiment analysis using Lexicon-Based method
             df['Lexicon_Result'] = df['Preprocessed_Text'].apply(
@@ -248,6 +255,54 @@ def result():
         data1=data1,
         columns1=columns1,
     )
+
+
+@app.route("/laporan", methods=["GET", "POST"])
+def laporan():
+    (
+        error_msg,
+        success_msg,
+        data_table,
+        chart_report,
+        dataset_size,
+        wordcloud_positive,
+        wordcloud_negative,
+        wordcloud_neutral,
+        bar_chart,
+        year
+    ) = report_display()
+
+    return render_template(
+        "laporan.html",
+        error=error_msg,
+        success=success_msg,
+        data_table=data_table,
+        dataset_size=dataset_size,
+        chart_report=chart_report,
+        wordcloud_positive=wordcloud_positive,
+        wordcloud_negative=wordcloud_negative,
+        wordcloud_neutral=wordcloud_neutral,
+        bar_chart=bar_chart,
+        year=year,
+        # data1=data1,
+        # columns1=columns1,
+    )
+
+
+@app.route("/download_report")
+def download_pdf():
+    sentiment_counts = print_report()  # Get the data for the report
+
+    # Render the HTML template to a string
+    rendered_html = render_template(
+        'download.html', sentiment_counts=sentiment_counts.to_dict(orient='records'))
+
+    # Convert HTML to PDF
+    pdfkit.from_string(rendered_html, "sentimen_report.pdf",
+                       configuration=pdfkit_config)
+
+    # Send the generated PDF as a file response
+    return send_file("sentimen_report.pdf", as_attachment=True, download_name="Laporan_Analisis_Sentimen_QRIS.pdf")
 
 
 if __name__ == '__main__':

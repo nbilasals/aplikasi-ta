@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hasil Sentimen Analisis QRIS</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+        }
+
+        th,
+        td {
+            padding: 8px;
+            border: 1px solid #ddd;
+        }
+
+        .tdc {
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        h1,
+        h2,
+        thead {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <!-- <img src="data:img/favicon/qris.png;base64,BASE64_STRING_HERE" alt="Logo"> -->
+        <!-- Replace with your logo path -->
+        <div>
+            <h1>Laporan Analisis Sentimen</h1>
+            <h2>Aplikasi SentiQRIS</h2>
+        </div>
+    </div>
+    <hr style="border-width: 2px;" class="mb-5">
+    <table class="mt-5">
+        <thead>
+            <tr>
+                <th class="text-center">Tahun</th>
+                <th class="text-center">Total Data</th>
+                <th class="text-center">Jumlah Sentimen</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in sentiment_counts %}
+            <tr>
+                <td class="tdc">{{ row['year']}}</td>
+                <td class="tdc">{{ row['total'] }}</td>
+                <td>
+                    <ul>
+                        <li>Negatif: {{ row['negative'] }}</li>
+                        <li>Positif: {{ row['positive'] }}</li>
+                        <li>Netral: {{ row['neutral'] }}</li>
+                    </ul>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+
+</html>

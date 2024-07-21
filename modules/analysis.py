@@ -56,7 +56,7 @@ def analyze():
     # Convert the DataFrame to an HTML table
     data_analyze_head = df_analyze_head.to_html(index=False)
     data_ranking_head = df_ranking_head.to_html(
-        index=False, classes="table table-striped")
+        index=False, classes="table table-striped text-center")
 
     # make a variable for classification
     X = tfidf_mat

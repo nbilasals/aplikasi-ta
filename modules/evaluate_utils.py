@@ -1,5 +1,7 @@
 from sklearn.metrics import confusion_matrix
 import matplotlib.pyplot as plt
+import pdfkit
+from flask import render_template_string
 import os
 import ast
 import pandas as pd
@@ -62,7 +64,7 @@ def generate_wordcloud(df_pred, sentiment, filename, column_name):
 
 def generate_pie_chart_result(df, filename):
     label_counts = df["Predict_Result"].value_counts()
-    plt.figure(figsize=(6, 6))
+    plt.figure(figsize=(8, 8))
     colors = ["#FACF32", "#FA6368", "#21CCAC"]
     percentages = (label_counts / label_counts.sum()) * 100
     legend_labels = label_counts.index
@@ -94,3 +96,31 @@ def sentiment_analysis_lexicon_indonesia(text, lexicon_positive, lexicon_negativ
             score -= lexicon_negative[word_neg]
     polarity = 'positive' if score > 0 else 'negative' if score < 0 else 'neutral'
     return score, polarity
+
+
+def generate_bar_chart(sentiment_counts, output_path):
+    # Calculate the total counts for each year
+    sentiment_counts['total'] = sentiment_counts.sum(axis=1)
+
+    # Define colors for each sentiment category
+    colors = ["#FACF32", "#FA6368", "#21CCAC", "#FF9F00"]
+
+    # Plot the bar chart with custom colors
+    ax = sentiment_counts.plot(
+        kind='bar', figsize=(10, 6), width=0.8, color=colors)
+
+    plt.title('Jumlah Sentimen per Tahun')
+    plt.xlabel('Tahun')
+    plt.ylabel('Jumlah Komentar')
+    plt.legend(title='Sentiment')
+    plt.grid(True, axis='y')
+
+    # Annotate each bar with its height
+    for p in ax.patches:
+        ax.annotate(str(p.get_height()), (p.get_x()
+                    * 1.005, p.get_height() * 1.005))
+
+    plt.savefig(output_path)
+    plt.close()
+
+    return output_path

@@ -21,15 +21,70 @@
     <link rel="stylesheet"
         href="{{ url_for('static', filename='vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='vendor/libs/apex-charts/apex-charts.css') }}" />
-
-    <script src="{{ url_for('static', filename='vendor/js/helpers.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/config.js') }}"></script>
-
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.css" />
+    <style>
+        .header-image {
+            position: absolute;
+            /* Position the logo absolutely */
+            top: 10px;
+            right: 10px;
+            width: 20vw;
+            /* Adjust width for responsiveness */
+            max-width: 250px;
+            /* Maximum width */
+            height: auto;
+        }
+
+        @media (max-width: 1200px) {
+            .header-image {
+                width: 25vw;
+                /* Adjust width for medium screens */
+                max-width: 200px;
+                right: 15px;
+                /* Adjust positioning */
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-image {
+                width: 30vw;
+                /* Adjust width for smaller screens */
+                max-width: 150px;
+                right: 10px;
+                /* Adjust positioning */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-image {
+                width: 40vw;
+                /* Further adjust width for very small screens */
+                max-width: 120px;
+                right: 5px;
+                /* Adjust positioning */
+            }
+        }
+
+        /* Make the sidebar toggle visible only on small screens */
+        .layout-menu-toggle {
+            display: none;
+            /* Hide by default */
+        }
+
+        @media (max-width: 768px) {
+            .layout-menu-toggle {
+                display: block;
+                /* Show on small screens */
+            }
+        }
+    </style>
 
 </head>
 
 <body>
+    <!-- Add the image here -->
+    <img src="{{ url_for('static', filename='img/uho.png') }}" alt="UHO" class="header-image" />
+
     <div class="layout-wrapper layout-content-navbar">
         <div class="layout-container">
             <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
@@ -80,6 +135,12 @@
                             <div data-i18n="Layouts">Model Evaluation</div>
                         </a>
                     </li>
+                    <li class="menu-item {% if request.endpoint == 'laporan' %}active{% endif %}">
+                        <a href="{{ url_for('laporan') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-receipt"></i>
+                            <div data-i18n="Layouts">Laporan</div>
+                        </a>
+                    </li>
                 </ul>
             </aside>
             <div class="layout-page">
@@ -90,6 +151,7 @@
                             <i class="bx bx-menu bx-sm"></i>
                         </a>
                     </div>
+
                     <!-- <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
                         <ul class="navbar-nav flex-row align-items-center ms-auto">
                             <li class="nav-item lh-1 me-3">

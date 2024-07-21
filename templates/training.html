@@ -29,7 +29,7 @@
     <div class="card mb-4" id="tf-idf">
         <h5 class="card-header text-primary"><strong>TF-IDF</strong></h5>
         <div class="card-body">
-            <div class="table-responsive">
+            <div class="table-responsive text-center">
                 <!-- Display the table -->
                 {% if data_ranking_head %}
                 <div class="table__wrapper">{{ data_ranking_head | safe }}</div>
@@ -43,7 +43,7 @@
         </h5>
         <div class="card-body">
             <p>
-                <span style="font-weight: bold">Split Amount:</span> {{ split_amount }}
+                <span style="font-weight: bold">Pembagian Data:</span> {{ split_amount }}
             </p>
             <p>
                 <span style="font-weight: bold">Training Data:</span> {{ training_data }}

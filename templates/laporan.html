@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Laporan
+{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <h1 class="fw-bold py-3 mb-4 text-primary">Laporan Analisis Sentimen</h1>
+
+        <div class="card mb-4">
+            <h4 class="card-header text-primary"><strong>Download Laporan</strong></h4>
+            <div class="card-body">
+                <a href="{{ url_for('download_pdf') }}" class="btn btn-primary">Download</a>
+            </div>
+        </div>
+
+        <!-- Dropdown untuk memilih tahun -->
+        <div class="card mb-4">
+            <h4 class="card-header text-primary"><strong>Pilih Tahun</strong></h4>
+            <div class="card-body">
+                <form id="year-form" method="POST" action="">
+                    <select id="year-select" name="year" class="form-select"
+                        onchange="document.getElementById('year-form').submit();">
+                        <option value="all" {% if year=='all' %}selected{% endif %}>All Year</option>
+                        <option value="2019" {% if year=='2019' %}selected{% endif %}>2019</option>
+                        <option value="2020" {% if year=='2020' %}selected{% endif %}>2020</option>
+                        <option value="2021" {% if year=='2021' %}selected{% endif %}>2021</option>
+                        <option value="2022" {% if year=='2022' %}selected{% endif %}>2022</option>
+                        <option value="2023" {% if year=='2023' %}selected{% endif %}>2023</option>
+                        <option value="2024" {% if year=='2024' %}selected{% endif %}>2024</option>
+                    </select>
+                </form>
+            </div>
+        </div>
+
+        <!-- <div class="card mb-4">
+            <h4 class="card-header text-primary"><strong>Hasil Analisis Sentimen</strong></h4>
+            <div class="card-body">
+                {% if data_table %}
+                <div class="dataset__content__data">
+                    <p>Jumlah Data Masuk: {{ dataset_size[0] }}</p>
+                    <!-- <p>Columns: {{ dataset_size[1] }}</p> -->
+
+        <!-- <div class="table__wrapper mt-5">{{ data_table | safe }}</div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        End of Hasil Analisis Sentimen card -->
+
+        <div class="card mb-4">
+            <h4 class="card-header text-primary"><strong>Hasil Analisis Sentimen</strong></h4>
+            <div class="card-body text-center">
+                <p>Jumlah Data Masuk: {{ dataset_size[0] }}</p>
+                <img src="{{ chart_report }}" height="750" width="750" alt="Pie Chart" class="pie__chart img-fluid" />
+            </div>
+        </div> <!-- End of Pie Chart Data card -->
+
+        {% if bar_chart %}
+        <div class="card mb-4">
+            <h4 class="card-header text-primary"><strong>Jumlah Sentimen per Tahun</strong></h4>
+            <div class="card-body text-center">
+                <img src="{{ bar_chart }}" alt="bar Chart" class="bar__chart img-fluid" />
+            </div>
+        </div> <!-- End of Line Chart Data card -->
+        {% endif %}
+
+        <div class="card mb-4">
+            <h4 class="card-header text-primary"><strong>Wordclouds</strong></h4>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h6 class="text-center">Positive</h6>
+                        <img src="{{ wordcloud_positive }}" alt="Wordcloud Positive" class="img-fluid" />
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="text-center">Negative</h6>
+                        <img src="{{ wordcloud_negative }}" alt="Wordcloud Negative" class="img-fluid" />
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="text-center">Neutral</h6>
+                        <img src="{{ wordcloud_neutral }}" alt="Wordcloud Neutral" class="img-fluid" />
+                    </div>
+                </div>
+            </div>
+        </div> <!-- End of Wordclouds card -->
+    </div> <!-- End of container-xxl -->
+</div> <!-- End of content-wrapper -->
+{% endblock %}
